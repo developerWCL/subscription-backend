@@ -22,19 +22,20 @@ export class ServicesCatalog {
   description: string | null;
 
   @Column({ type: 'text', nullable: true })
-  service_token: string | null;
+  @Column({ name: 'service_token', type: 'text', nullable: true })
+  serviceToken: string | null;
 
-  @Column({ type: 'text', nullable: true })
-  api_url: string | null;
+  @Column({ name: 'api_url', type: 'text', nullable: true })
+  apiUrl: string | null;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  updatedAt: Date;
 
-  @DeleteDateColumn({ type: 'timestamp', nullable: true })
-  deleted_at?: Date;
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  deletedAt?: Date;
 
   @OneToMany(() => SubscriptionPlan, (p) => p.service)
   plans: SubscriptionPlan[];

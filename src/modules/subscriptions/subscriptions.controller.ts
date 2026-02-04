@@ -43,9 +43,10 @@ export class SubscriptionsController {
     try {
       const payload: CreateSubscriptionDto = body;
       return this.svc.createSubscription(payload);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Create failed';
       throw new HttpException(
-        err.message || 'Create failed',
+        message || 'Create failed',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -73,9 +74,10 @@ export class SubscriptionsController {
   async update(@Param('id') id: string, @Body() body: UpdateSubscriptionDto) {
     try {
       return this.svc.updateSubscription(id, body);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
       throw new HttpException(
-        err.message || 'Update failed',
+        message || 'Update failed',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -93,9 +95,10 @@ export class SubscriptionsController {
   async createPlan(@Body() body: CreatePlanDto) {
     try {
       return this.svc.createPlan(body);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
       throw new HttpException(
-        err.message || 'Create plan failed',
+        message || 'Create plan failed',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -120,9 +123,10 @@ export class SubscriptionsController {
   async updatePlan(@Param('id') id: string, @Body() body: UpdatePlanDto) {
     try {
       return this.svc.updatePlan(id, body);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
       throw new HttpException(
-        err.message || 'Update plan failed',
+        message || 'Update plan failed',
         HttpStatus.BAD_REQUEST,
       );
     }

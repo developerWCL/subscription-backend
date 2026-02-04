@@ -1,4 +1,5 @@
 import { IsString, IsOptional } from 'class-validator';
+import { Expose } from 'class-transformer';
 
 export class UpdateServiceDto {
   @IsOptional()
@@ -11,5 +12,6 @@ export class UpdateServiceDto {
 
   @IsOptional()
   @IsString()
-  service_token?: string | null;
+  @Expose({ name: 'service_token' })
+  serviceToken?: string | null;
 }

@@ -18,7 +18,7 @@ export class ServicesCatalogService {
   private toResponse(s: ServicesCatalog): ServiceResponseDto {
     // Omit sensitive/relational fields when creating response
     const restObj: Partial<ServicesCatalog> = { ...s };
-    delete restObj.service_token;
+    delete restObj.serviceToken;
     const r = restObj as unknown as Record<string, unknown>;
     delete r.plans;
     delete r.subscriptions;
@@ -31,12 +31,12 @@ export class ServicesCatalogService {
     s.name = dto.name;
     s.description = dto.description;
     // Generate a plaintext token if not provided, hash before storing.
-    let plainToken: string | undefined = dto.service_token;
+    let plainToken: string | undefined = dto.serviceToken;
     if (!plainToken) plainToken = randomBytes(32).toString('hex');
     if (plainToken) {
-      s.service_token = await bcrypt.hash(plainToken, 10);
+      s.serviceToken = await bcrypt.hash(plainToken, 10);
     } else {
-      s.service_token = null;
+      s.serviceToken = null;
     }
 
     const saved = await repo.save(s);
@@ -61,14 +61,14 @@ export class ServicesCatalogService {
     if (!s) throw new NotFoundException('Service not found');
     if (dto.name !== undefined) s.name = dto.name;
     if (dto.description !== undefined) s.description = dto.description;
-    if (dto.service_token !== undefined) {
-      // If caller provides a new plaintext token, hash it before storing. If null provided, clear it.
-      if (dto.service_token === null) {
-        s.service_token = null;
-      } else if (dto.service_token) {
-        s.service_token = await bcrypt.hash(dto.service_token, 10);
+    const providedToken = dto.serviceToken;
+    if (dto.serviceToken !== undefined) {
+      if (providedToken === null) {
+        s.serviceToken = null;
+      } else if (providedToken) {
+        s.serviceToken = await bcrypt.hash(providedToken, 10);
       } else {
-        s.service_token = null;
+        s.serviceToken = null;
       }
     }
     const saved = await repo.save(s);

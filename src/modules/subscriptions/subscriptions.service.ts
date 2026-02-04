@@ -17,7 +17,7 @@ export class SubscriptionsService {
     const repo = this.dataSource.getRepository(ServicesCatalog);
     const services = await repo.find();
     const hashedTokens = services
-      .map((s) => s.service_token)
+      .map((s) => s.serviceToken)
       .filter((t): t is string => !!t);
 
     // If no token is configured in DB, allow by default (no service-token enforcement)
@@ -40,13 +40,14 @@ export class SubscriptionsService {
     const companies = await companyRepo.find({ where: {} });
     let company: Company | undefined;
     for (const c of companies) {
-      if (!c.api_key) continue;
-      const match = await bcrypt.compare(apiKey, c.api_key);
+      if (!c.apiKey) continue;
+      const match = await bcrypt.compare(apiKey, c.apiKey);
       if (match) {
         company = c;
         break;
       }
     }
+
     if (!company) return { valid: false };
 
     const subscriptionRepo = this.dataSource.getRepository(CompanySubscription);
@@ -69,8 +70,8 @@ export class SubscriptionsService {
         companyId: company.id,
         status: cs.status,
         planId: cs.plan?.id,
-        start_date: cs.start_date,
-        end_date: cs.end_date,
+        startDate: cs.startDate,
+        endDate: cs.endDate,
       };
     }
 
@@ -85,7 +86,7 @@ export class SubscriptionsService {
 
   // CRUD for CompanySubscription
   async createSubscription(payload: CreateSubscriptionDto) {
-    const { companyId, serviceId, planId, status, start_date, end_date } =
+    const { companyId, serviceId, planId, status, startDate, endDate } =
       payload;
     const companyRepo = this.dataSource.getRepository(Company);
     const serviceRepo = this.dataSource.getRepository(ServicesCatalog);
@@ -106,59 +107,10 @@ export class SubscriptionsService {
       subscription.plan = plan;
     }
     if (status) subscription.status = status;
-    if (start_date) subscription.start_date = new Date(start_date);
-    if (end_date) subscription.end_date = new Date(end_date);
+    if (startDate) subscription.startDate = new Date(startDate);
+    if (endDate) subscription.endDate = new Date(endDate);
 
     const saved = await subRepo.save(subscription);
-
-    // If the service exposes an API URL, notify it to create the spa
-    // try {
-    //   const apiUrl = service.api_url;
-    //   if (apiUrl) {
-    //     const base = apiUrl.replace(/\/+$/, '');
-    //     const url = `${base}/spas`;
-    //     const body = {
-    //       companyId: company.id,
-    //       subscriptionId: saved.id,
-    //       name: company.name,
-    //       billing_email: company.billing_email || null,
-    //     };
-    //     // use global fetch if available
-    //     const fetcher: any =
-    //       (globalThis as any).fetch || (globalThis as any).nodeFetch;
-    //     if (fetcher) {
-    //       await fetcher(url, {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify(body),
-    //       });
-    //     } else {
-    //       // fallback to simple http(s) request
-    //       const http = url.startsWith('https')
-    //         ? await import('https')
-    //         : await import('http');
-    //       const parsed = new URL(url);
-    //       const req = http.request(
-    //         parsed,
-    //         {
-    //           method: 'POST',
-    //           headers: { 'Content-Type': 'application/json' },
-    //         },
-    //         (res) => {
-    //           // drain
-    //           res.on('data', () => {});
-    //         },
-    //       );
-    //       req.on('error', (err: any) => {
-    //         console.error('Failed to notify service api:', err.message || err);
-    //       });
-    //       req.write(JSON.stringify(body));
-    //       req.end();
-    //     }
-    //   }
-    // } catch (err) {
-    //   console.error('Error creating spa on service api:', err);
-    // }
 
     return saved;
   }
@@ -199,17 +151,17 @@ export class SubscriptionsService {
   async deleteSubscription(id: string) {
     const subRepo = this.dataSource.getRepository(CompanySubscription);
     // soft delete if supported
-    await subRepo.softDelete(id as any);
+    await subRepo.softDelete(id);
     return { deleted: true };
   }
 
   // CRUD for SubscriptionPlan
-  async createPlan(payload: { name: string; price_monthly?: string | number }) {
-    const { name, price_monthly } = payload;
+  async createPlan(payload: { name: string; priceMonthly?: string | number }) {
+    const { name, priceMonthly } = payload;
     const planRepo = this.dataSource.getRepository(SubscriptionPlan);
     const plan = new SubscriptionPlan();
     plan.name = name;
-    if (price_monthly !== undefined) plan.price_monthly = String(price_monthly);
+    if (priceMonthly !== undefined) plan.priceMonthly = String(priceMonthly);
 
     return planRepo.save(plan);
   }
@@ -242,7 +194,7 @@ export class SubscriptionsService {
 
   async deletePlan(id: string) {
     const planRepo = this.dataSource.getRepository(SubscriptionPlan);
-    await planRepo.softDelete(id as any);
+    await planRepo.softDelete(id);
     return { deleted: true };
   }
 }

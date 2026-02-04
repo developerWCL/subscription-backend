@@ -1,4 +1,5 @@
 import { IsOptional, IsString, IsDateString } from 'class-validator';
+import { Expose } from 'class-transformer';
 
 export class CreateSubscriptionDto {
   @IsString()
@@ -17,9 +18,11 @@ export class CreateSubscriptionDto {
 
   @IsOptional()
   @IsDateString()
-  start_date?: string | Date | null;
+  @Expose({ name: 'start_date' })
+  startDate?: string | Date | null;
 
   @IsOptional()
   @IsDateString()
-  end_date?: string | Date | null;
+  @Expose({ name: 'end_date' })
+  endDate?: string | Date | null;
 }

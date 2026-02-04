@@ -34,17 +34,19 @@ export class CompanySubscription {
   status: string;
 
   @Column({ type: 'timestamp', nullable: true })
-  start_date?: Date;
+  @Column({ name: 'start_date', type: 'timestamp', nullable: true })
+  startDate?: Date;
 
   @Column({ type: 'timestamp', nullable: true })
-  end_date?: Date;
+  @Column({ name: 'end_date', type: 'timestamp', nullable: true })
+  endDate?: Date;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  updatedAt: Date;
 
-  @DeleteDateColumn({ type: 'timestamp', nullable: true })
-  deleted_at?: Date;
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  deletedAt?: Date;
 }

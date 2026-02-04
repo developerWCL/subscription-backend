@@ -1,4 +1,5 @@
 import { IsString, IsOptional, IsNotEmpty } from 'class-validator';
+import { Expose } from 'class-transformer';
 
 export class CreateServiceDto {
   @IsString()
@@ -11,5 +12,6 @@ export class CreateServiceDto {
 
   @IsOptional()
   @IsString()
-  service_token?: string;
+  @Expose({ name: 'service_token' })
+  serviceToken?: string;
 }

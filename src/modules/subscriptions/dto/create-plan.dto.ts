@@ -1,5 +1,5 @@
 import { IsOptional, IsString, IsNumber } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Expose } from 'class-transformer';
 
 export class CreatePlanDto {
   @IsString()
@@ -11,5 +11,6 @@ export class CreatePlanDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  price_monthly?: number;
+  @Expose({ name: 'price_monthly' })
+  priceMonthly?: number;
 }

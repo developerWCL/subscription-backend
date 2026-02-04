@@ -23,27 +23,30 @@ export class CompaniesService {
   }
 
   private toResponse(company: Company): CompanyResponseDto {
-    const restObj: Partial<Company> = { ...company };
-    delete restObj.api_key;
-    const r = restObj as unknown as Record<string, unknown>;
-    delete r.subscriptions;
-    return restObj as CompanyResponseDto;
+    return {
+      id: company.id,
+      name: company.name,
+      billingEmail: company.billingEmail ?? null,
+      createdAt: company.createdAt,
+      updatedAt: company.updatedAt,
+      deletedAt: company.deletedAt ?? null,
+    } as CompanyResponseDto;
   }
 
   async create(createDto: CreateCompanyDto) {
     const repo = this.repo();
     const company = new Company();
     company.name = createDto.name;
-    company.billing_email = createDto.billing_email;
+    company.billingEmail = createDto.billingEmail;
 
     // Generate a plaintext API key if not provided, but always store the hashed value.
-    let plainApiKey: string | undefined = createDto.api_key;
+    let plainApiKey: string | undefined = createDto.apiKey;
     if (!plainApiKey) {
       plainApiKey = randomBytes(32).toString('hex');
     }
 
     if (plainApiKey) {
-      company.api_key = await this.doHash(plainApiKey, 10);
+      company.apiKey = await this.doHash(plainApiKey, 10);
     }
 
     const saved = await repo.save(company);
@@ -67,12 +70,12 @@ export class CompaniesService {
     const company = await repo.findOne({ where: { id } });
     if (!company) throw new NotFoundException('Company not found');
 
-    if (updateDto.name !== undefined) company.name = updateDto.name as string;
-    if (updateDto.billing_email !== undefined)
-      company.billing_email = updateDto.billing_email as string | null;
-    if (updateDto.api_key !== undefined) {
-      company.api_key = updateDto.api_key
-        ? await this.doHash(updateDto.api_key as string, 10)
+    if (updateDto.name !== undefined) company.name = updateDto.name;
+    if (updateDto.billingEmail !== undefined)
+      company.billingEmail = updateDto.billingEmail;
+    if (updateDto.apiKey !== undefined) {
+      company.apiKey = updateDto.apiKey
+        ? await this.doHash(updateDto.apiKey, 10)
         : null;
     }
 

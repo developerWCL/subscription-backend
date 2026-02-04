@@ -22,17 +22,23 @@ export class SubscriptionPlan {
   @Column()
   name: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  price_monthly: string;
+  @Column({
+    name: 'price_monthly',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0,
+  })
+  priceMonthly: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  updatedAt: Date;
 
-  @DeleteDateColumn({ type: 'timestamp', nullable: true })
-  deleted_at?: Date;
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  deletedAt?: Date;
 
   @OneToMany(() => CompanySubscription, (cs) => cs.plan)
   subscriptions: CompanySubscription[];

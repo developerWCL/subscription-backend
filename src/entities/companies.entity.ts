@@ -17,20 +17,20 @@ export class Company {
   @Column()
   name: string;
 
-  @Column({ nullable: true, unique: true })
-  api_key?: string;
+  @Column({ name: 'api_key', nullable: true, unique: true })
+  apiKey?: string;
 
-  @Column({ nullable: true })
-  billing_email?: string;
+  @Column({ name: 'billing_email', nullable: true })
+  billingEmail?: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  updatedAt: Date;
 
-  @DeleteDateColumn({ type: 'timestamp', nullable: true })
-  deleted_at?: Date;
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  deletedAt?: Date;
 
   @OneToMany(() => CompanySubscription, (cs) => cs.company)
   subscriptions: CompanySubscription[];
