@@ -38,6 +38,7 @@ export class CompaniesService {
     const company = new Company();
     company.name = createDto.name;
     company.billingEmail = createDto.billingEmail;
+    company.metadata = createDto.metadata;
 
     // Generate a plaintext API key if not provided, but always store the hashed value.
     let plainApiKey: string | undefined = createDto.apiKey;

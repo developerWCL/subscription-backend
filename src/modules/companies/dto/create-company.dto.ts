@@ -15,4 +15,8 @@ export class CreateCompanyDto {
   @IsOptional()
   @IsEmail()
   billingEmail?: string;
+
+  @Expose({ name: 'metadata' })
+  @IsOptional()
+  metadata?: Record<string, any>;
 }
